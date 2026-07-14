@@ -1,100 +1,111 @@
 #include <iostream>
 using namespace std;
 
-class Node {
-public:
+// Node structure
+struct Node
+{
     int data;
     Node* next;
 
-    Node(int val) {
+    Node(int val)
+    {
         data = val;
         next = NULL;
     }
 };
 
 // Insert at end
-void insert(Node*& head, int val) {
+void insert(Node*& head, int val)
+{
     Node* newNode = new Node(val);
 
-    if (head == NULL) {
+    if (head == NULL)
+    {
         head = newNode;
         return;
     }
 
     Node* temp = head;
-    while (temp->next != NULL) {
+    while (temp->next != NULL)
+    {
         temp = temp->next;
     }
 
     temp->next = newNode;
 }
 
+// Display linked list
+void display(Node* head)
+{
+    while (head != NULL)
+    {
+        cout << head->data << " -> ";
+        head = head->next;
+    }
+    cout << "NULL" << endl;
+}
+
 // Delete last occurrence of key
-void deleteLastOccurrence(Node*& head, int key) {
+void deleteLastOccurrence(Node*& head, int key)
+{
     if (head == NULL)
         return;
 
     Node* temp = head;
-    Node* lastOcc = NULL;
-    Node* prevLastOcc = NULL;
+    Node* last = NULL;
+    Node* prevLast = NULL;
     Node* prev = NULL;
-
-    while (temp != NULL) {
-        if (temp->data == key) {
-            lastOcc = temp;
-            prevLastOcc = prev;
+    while (temp != NULL)
+    {
+        if (temp->data == key)
+        {
+            last = temp;
+            prevLast = prev;
         }
         prev = temp;
         temp = temp->next;
     }
-
     // Key not found
-    if (lastOcc == NULL)
+    if (last == NULL)
+    {
+        cout << "Key not found!" << endl;
         return;
-
-    // If last occurrence is head
-    if (prevLastOcc == NULL) {
-        Node* del = head;
-        head = head->next;
-        delete del;
     }
-    else {
-        prevLastOcc->next = lastOcc->next;
-        delete lastOcc;
+    // If last occurrence is first node
+    if (prevLast == NULL)
+    {
+        head = head->next;
+        delete last;
+    }
+    else
+    {
+        prevLast->next = last->next;
+        delete last;
     }
 }
 
-// Print linked list
-void printList(Node* head) {
-    while (head != NULL) {
-        cout << head->data;
-        if (head->next != NULL)
-            cout << " -> ";
-        head = head->next;
-    }
-    cout << " -> NULL" << endl;
-}
-
-int main() {
+int main()
+{
     Node* head = NULL;
 
-    // Example: 1 -> 2 -> 3 -> 1 -> 4
+    // Creating Linked List
     insert(head, 1);
     insert(head, 2);
     insert(head, 3);
     insert(head, 1);
     insert(head, 4);
 
-    int key = 1;
+    cout << "Original Linked List:\n";
+    display(head);
 
-    cout << "Original List: ";
-    printList(head);
+    int key;
+    cout << "\nEnter key to delete last occurrence: ";
+    cin >> key;
 
     deleteLastOccurrence(head, key);
 
-    cout << "After deleting last occurrence of "
-         << key << ": ";
-    printList(head);
+    cout << "\nLinked List after deletion:\n";
+    display(head);
 
     return 0;
 }
